@@ -20,6 +20,9 @@ if $use_stg;then
 envs+=("stg")
 fi
 
+cp kube-angular-template/container/Dockerfile Dockerfile
+sed -i "" -e "s/{{app_name}}/$app_name/" Dockerfile
+cp kube-angular-template/container/docker-compose.yml docker-compose.yml
 mkdir k8s
 for env in ${envs[@]}
 do
