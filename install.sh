@@ -11,23 +11,25 @@ case "$yn" in
     *) use_dev=false ;;
 esac
 
-declare -a envs=()
 declare -a envs=("prod")
 if $use_dev;then
-envs=('dev' "${envs[@]}")
+envs+=("dev")
 fi
 
 if $use_stg;then
-envs=('stg' "${envs[@]}")
+envs+=("stg")
 fi
 
 mkdir k8s
-sed -i "s/{{app_name}}/$app_name/" manifest/deployment.yml
-sed -i "s/{{app_name}}/$app_name/" manifest/service.yml
-sed -i "s/{{app_name}}/$app_name/" manifest/config.yml
-for env in envs
+for env in ${envs[@]}
 do
-cp kube-angular-template/manifest/depolyment.yml k8s/"${env}".depolyment.yml
-cp kube-angular-template/manifest/service.yml k8s/"${env}".service.yml
-cp kube-angular-template/manifest/config.yml k8s/"${env}".config.yml
+mkdir k8s/${env}
+cp kube-angular-template/manifest/deployment.yml k8s/"${env}"/deployment.yml
+cp kube-angular-template/manifest/service.yml k8s/"${env}"/service.yml
+cp kube-angular-template/manifest/config-map.yml k8s/"${env}"/config-map.yml
+sed -i "" -e "s/{{app_name}}/$env-$app_name/" k8s/"${env}"/deployment.yml
+sed -i "" -e "s/{{app_name}}/$env-$app_name/" k8s/"${env}"/service.yml
+sed -i "" -e "s/{{app_name}}/$env-$app_name/" k8s/"${env}"/config-map.yml
 done
+
+rm -rf kube-angular-template
