@@ -26,10 +26,8 @@ FROM nginx:1.13.3-alpine
 
 ## Copy our default nginx config
 
-ARG nginx_conf_path=nginx/prod/default.conf
-ARG nginx_htpasswd_path=nginx/prod/.htpasswd
+ARG nginx_conf_path=nginx/default.conf
 COPY ${nginx_conf_path} /etc/nginx/conf.d/
-COPY ${nginx_htpasswd_path} /etc/nginx/.htpasswd
 
 ## Remove default nginx website
 RUN rm -rf /usr/share/nginx/html/*
