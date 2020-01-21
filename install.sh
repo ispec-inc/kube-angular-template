@@ -1,3 +1,4 @@
+#/bin/bash
 git clone git@github.com:ispec-inc/kube-angular-template.git
 read -p "application name?: " app_name
 read -p "use dev? (y/N): " yn
@@ -21,8 +22,8 @@ envs+=("stg")
 fi
 
 cp kube-angular-template/container/Dockerfile Dockerfile
-sed -i "" -e "s/{{app_name}}/$app_name/" Dockerfile
 cp kube-angular-template/container/docker-compose.yml docker-compose.yml
+sed -i "" -e "s/{{app_name}}/$app_name/" docker-compose.yml
 mkdir k8s
 for env in ${envs[@]}
 do
