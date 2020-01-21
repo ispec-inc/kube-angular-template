@@ -22,6 +22,7 @@ envs+=("stg")
 fi
 
 cp kube-angular-template/container/Dockerfile Dockerfile
+cp -r kube-angular-template/nginx nginx
 cp kube-angular-template/container/docker-compose.yml docker-compose.yml
 sed -i "" -e "s/{{app_name}}/$app_name/" docker-compose.yml
 mkdir k8s
