@@ -22,19 +22,14 @@ envs+=("stg")
 fi
 
 cp kube-angular-template/container/Dockerfile Dockerfile
-cp -r kube-angular-template/nginx nginx
 cp kube-angular-template/container/docker-compose.yml docker-compose.yml
+cp -r kube-angular-template/nginx nginx
 sed -i "" -e "s/{{app_name}}/$app_name/" docker-compose.yml
 mkdir k8s
 for env in ${envs[@]}
 do
 mkdir k8s/${env}
-cp kube-angular-template/manifest/deployment.yml k8s/"${env}"/deployment.yml
-cp kube-angular-template/manifest/service.yml k8s/"${env}"/service.yml
-cp kube-angular-template/manifest/config-map.yml k8s/"${env}"/config-map.yml
-sed -i "" -e "s/{{app_name}}/$env-$app_name/" k8s/"${env}"/deployment.yml
-sed -i "" -e "s/{{app_name}}/$env-$app_name/" k8s/"${env}"/service.yml
-sed -i "" -e "s/{{app_name}}/$env-$app_name/" k8s/"${env}"/config-map.yml
+cp kube-angular-template/manifest/* k8s/"${env}"
+find k8s/"${env}"/*.yml | xargs sed -i "" -e "s/{{app_name}}/$env-$app_name/"
 done
-
 rm -rf kube-angular-template
