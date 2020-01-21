@@ -16,4 +16,4 @@ spec:
     spec:
       containers:
       - name: {{app_name}}
-        image: 315250626010.dkr.ecr.ap-northeast-1.amazonaws.com/dev-mos-front-admin:{{image_name}}
+        image: {{aws_user_name}}.dkr.ecr.ap-northeast-1.amazonaws.com/{{image_name}}:{{image_tag}}
