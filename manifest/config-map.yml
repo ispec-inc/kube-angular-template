@@ -1,0 +1,5 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{app_name}}-config
+data:
