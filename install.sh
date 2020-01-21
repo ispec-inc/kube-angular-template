@@ -1,5 +1,5 @@
 #/bin/bash
-git clone git@github.com:ispec-inc/kube-angular-template.git
+git clone https://github.com/ispec-inc/kube-angular-template.git
 read -p "application name?: " app_name
 read -p "use dev? (y/N): " yn
 case "$yn" in
