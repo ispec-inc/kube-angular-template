@@ -1,4 +1,7 @@
 #/bin/bash
+# export AWS_ACCOUNT_ID=$(aws sts get-caller-identity|jq '.["Account"]'|read h;echo ${h:1:-1})
+export AWS_ACCOUNT_ID_ROW=$(aws sts get-caller-identity|jq '.["Account"]')
+export AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID_ROW:1:${#AWS_ACCOUNT_ID_ROW}-2}
 git clone https://github.com/ispec-inc/kube-angular-template.git
 read -p "application name?: " app_name
 read -p "use dev? (y/N): " yn
@@ -6,6 +9,7 @@ case "$yn" in
     [yY]*) use_dev=true ;;
     *) use_dev=false ;;
 esac
+
 read -p "use stg? (y/N): " yn
 case "$yn" in
     [yY]*) use_dev=true ;;
@@ -13,6 +17,7 @@ case "$yn" in
 esac
 
 declare -a envs=("prod")
+
 if $use_dev;then
 envs+=("dev")
 fi
@@ -24,12 +29,24 @@ fi
 cp kube-angular-template/container/Dockerfile Dockerfile
 cp kube-angular-template/container/docker-compose.yml docker-compose.yml
 cp -r kube-angular-template/nginx nginx
+
+if [ ! -e .github/workflows ];then
+  mkdir -p .github/workflows
+fi
+cp kube-angular-template/workflow.yml ./.github/workflows/prod.yml
+
 sed -i "" -e "s/{{app_name}}/$app_name/" docker-compose.yml
-mkdir k8s
+
 for env in ${envs[@]}
 do
-mkdir k8s/${env}
-cp kube-angular-template/manifest/* k8s/"${env}"
-find k8s/"${env}"/*.yml | xargs sed -i "" -e "s/{{app_name}}/$env-$app_name/"
+  if [ ! -e k8s/${env} ]; then
+    mkdir -p k8s/${env}
+  fi
+  cp kube-angular-template/manifest/* k8s/"${env}"
+  find k8s/"${env}"/*.yml | xargs sed -i "" -e "s/{{app_name}}/$app_name/"
+  find k8s/"${env}"/*.yml | xargs sed -i "" -e "s/{{aws_account_id}}/$AWS_ACCOUNT_ID/"
 done
+
+find .github/workflows/prod.yml | xargs sed -i "" -e "s/{{app_name}}/$app_name/"
+find .github/workflows/prod.yml | xargs sed -i "" -e "s/{{aws_account_id}}/$AWS_ACCOUNT_ID/"
 rm -rf kube-angular-template
