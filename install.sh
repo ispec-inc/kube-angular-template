@@ -28,7 +28,11 @@ fi
 
 cp kube-angular-template/container/Dockerfile Dockerfile
 cp kube-angular-template/container/docker-compose.yml docker-compose.yml
-cp -r kube-angular-template/nginx nginx
+
+if [ ! -e nginx ];then
+  mkdir -p nginx
+fi
+cp -r kube-angular-template/nginx/** nginx
 
 if [ ! -e .github/workflows ];then
   mkdir -p .github/workflows
