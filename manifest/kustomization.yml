@@ -1,5 +1,5 @@
 resources:
-- api.yml
+- web.yml
 images:
 - name: {{aws_account_id}}.dkr.ecr.ap-northeast-1.amazonaws.com/{{app_name}}
   newName: {{aws_account_id}}.dkr.ecr.ap-northeast-1.amazonaws.com/{{app_name}}
